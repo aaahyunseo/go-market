@@ -19,10 +19,13 @@ public enum ErrorCode {
     // NotFoundException
     COOKIE_NOT_FOUND("4040", "쿠키를 찾을 수 없습니다."),
     USER_NOT_FOUND("4041", "유저를 찾을 수 없습니다."),
+    MARKET_NAME_NOT_FOUND("4042", "시장 이름을 찾을 수 없습니다."),
+    MARKET_LOC_NOT_FOUND("4043", "인근 시장 위치를 찾을 수 없습니다."),
 
     // ConflictException
     DUPLICATED_NAME("4090", "이미 사용중인 이름입니다."),
     DUPLICATED_ID("4091", "이미 사용중인 아이디입니다."),
+    DUPLICATED_MARKET("4092", "이미 방문한 장소입니다."),
 
     // ValidationException
     NOT_NULL("9001", "필수값이 누락되었습니다."),
