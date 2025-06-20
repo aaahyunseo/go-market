@@ -29,6 +29,10 @@ public class Market extends BaseEntity {
     @Column
     private String y;
 
+    // 관련 영상 URL
+    @Column
+    private String url;
+
     // 시장 내 상점
     @OneToMany(mappedBy = "market", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Shop> shops;
