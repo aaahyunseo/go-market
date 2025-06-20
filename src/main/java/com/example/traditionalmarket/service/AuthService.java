@@ -5,10 +5,13 @@ import com.example.traditionalmarket.authentication.PasswordHashEncryption;
 import com.example.traditionalmarket.dto.TokenResponseDto;
 import com.example.traditionalmarket.dto.request.auth.LoginDto;
 import com.example.traditionalmarket.dto.request.auth.SignupDto;
+import com.example.traditionalmarket.entity.MarketBook;
 import com.example.traditionalmarket.entity.User;
 import com.example.traditionalmarket.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,14 @@ public class AuthService {
                 .password(hashedPassword)
                 .name(signupDto.getName())
                 .build();
+
+        MarketBook marketBook = MarketBook.builder()
+                .user(newUser)
+                .visitedMarkets(new ArrayList<>())
+                .build();
+
+        newUser.setMarketBook(marketBook);
+
         userRepository.save(newUser);
 
         return createToken(newUser);
