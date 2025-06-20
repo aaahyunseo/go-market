@@ -1,5 +1,7 @@
 package com.example.traditionalmarket.service;
 
+import com.example.traditionalmarket.dto.response.market.MarketResponseData;
+import com.example.traditionalmarket.dto.response.market.MarketResponseDto;
 import com.example.traditionalmarket.entity.Market;
 import com.example.traditionalmarket.repository.MarketRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -8,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -53,5 +56,11 @@ public class MarketService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    // 전통 시장 리스트 조회하기
+    public MarketResponseData getAllMarkets() {
+        List<Market> markets = marketRepository.findAll();
+        return MarketResponseData.of(markets);
     }
 }
