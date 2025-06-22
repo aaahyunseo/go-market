@@ -3,12 +3,14 @@ package com.example.traditionalmarket.service;
 import com.example.traditionalmarket.authentication.PasswordHashEncryption;
 import com.example.traditionalmarket.dto.request.user.DeleteUserDto;
 import com.example.traditionalmarket.dto.response.UserResponseDto;
+import com.example.traditionalmarket.entity.MarketBook;
 import com.example.traditionalmarket.entity.User;
 import com.example.traditionalmarket.exception.ConflictException;
 import com.example.traditionalmarket.exception.NotFoundException;
 import com.example.traditionalmarket.exception.UnauthorizedException;
 import com.example.traditionalmarket.exception.errorcode.ErrorCode;
 import com.example.traditionalmarket.repository.UserRepository;
+import com.example.traditionalmarket.repository.VisitedMarketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +19,17 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final VisitedMarketRepository visitedMarketRepository;
     private final PasswordHashEncryption passwordHashEncryption;
 
     public UserResponseDto getUserInfo(User user) {
+        MarketBook marketBook = user.getMarketBook();
+        Long visitedCount = visitedMarketRepository.countByMarketBook(marketBook);
+
         UserResponseDto userResponseDto = UserResponseDto.builder()
+                .userId(user.getUserId())
                 .name(user.getName())
+                .visitMarketCount(visitedCount)
                 .build();
         return userResponseDto;
     }
