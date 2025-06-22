@@ -27,10 +27,6 @@ public class Shop extends BaseEntity {
     @Column
     private String y;
 
-    // 상점 관련 영상 url
-    @Column
-    private String url;
-
     // 시장
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "market_id")
