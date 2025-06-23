@@ -2,7 +2,7 @@ package com.example.traditionalmarket.service;
 
 import com.example.traditionalmarket.authentication.PasswordHashEncryption;
 import com.example.traditionalmarket.dto.request.user.DeleteUserDto;
-import com.example.traditionalmarket.dto.response.UserResponseDto;
+import com.example.traditionalmarket.dto.response.user.UserResponseDto;
 import com.example.traditionalmarket.entity.User;
 import com.example.traditionalmarket.exception.ConflictException;
 import com.example.traditionalmarket.exception.NotFoundException;
