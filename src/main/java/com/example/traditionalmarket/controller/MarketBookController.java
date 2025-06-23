@@ -2,6 +2,7 @@ package com.example.traditionalmarket.controller;
 
 import com.example.traditionalmarket.authentication.AuthenticatedUser;
 import com.example.traditionalmarket.dto.ResponseDto;
+import com.example.traditionalmarket.dto.response.marketbook.MarketBookAllResponseData;
 import com.example.traditionalmarket.dto.response.marketbook.MarketBookResponseData;
 import com.example.traditionalmarket.entity.User;
 import com.example.traditionalmarket.service.MarketBookService;
@@ -19,10 +20,15 @@ public class MarketBookController {
 
     private final MarketBookService marketBookService;
 
-    @GetMapping
-    public ResponseEntity<ResponseDto<MarketBookResponseData>> getUserInfo(@AuthenticatedUser User user) {
-        MarketBookResponseData marketBook = marketBookService.getMarketBook(user);
-        return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "시장도감 조회 완료", marketBook), HttpStatus.OK);
+    @GetMapping("/all")
+    public ResponseEntity<ResponseDto<MarketBookAllResponseData>> getAllMarketBook(@AuthenticatedUser User user) {
+        MarketBookAllResponseData marketBook = marketBookService.getAllMarketBook(user);
+        return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "전체 시장도감 조회 완료", marketBook), HttpStatus.OK);
     }
 
+    @GetMapping
+    public ResponseEntity<ResponseDto<MarketBookResponseData>> getMarketBook(@AuthenticatedUser User user) {
+        MarketBookResponseData marketBook = marketBookService.getMarketBook(user);
+        return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "방문 완료한 시장도감 조회 완료", marketBook), HttpStatus.OK);
+    }
 }
