@@ -1,5 +1,6 @@
 package com.example.traditionalmarket.service;
 
+import com.example.traditionalmarket.dto.response.marketbook.MarketBookAllResponseData;
 import com.example.traditionalmarket.dto.response.marketbook.MarketBookResponseData;
 import com.example.traditionalmarket.entity.Market;
 import com.example.traditionalmarket.entity.MarketBook;
@@ -19,14 +20,22 @@ public class MarketBookService {
     private final MarketRepository marketRepository;
     private final VisitedMarketRepository visitedMarketRepository;
 
-    public MarketBookResponseData getMarketBook(User user) {
+    public MarketBookAllResponseData getAllMarketBook(User user) {
         MarketBook marketBook = user.getMarketBook();
 
         List<Market> allMarkets = marketRepository.findAll();
 
         List<VisitedMarket> visitedMarkets = visitedMarketRepository.findByMarketBook(marketBook);
 
-        return MarketBookResponseData.of(allMarkets, visitedMarkets);
+        return MarketBookAllResponseData.of(allMarkets, visitedMarkets);
+    }
+
+    public MarketBookResponseData getMarketBook(User user) {
+        MarketBook marketBook = user.getMarketBook();
+
+        List<VisitedMarket> visitedMarkets = visitedMarketRepository.findByMarketBook(marketBook);
+
+        return MarketBookResponseData.of(visitedMarkets);
     }
 }
 
