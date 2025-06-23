@@ -1,7 +1,6 @@
 package com.example.traditionalmarket.service;
 
 import com.example.traditionalmarket.dto.response.market.MarketResponseData;
-import com.example.traditionalmarket.dto.response.market.MarketResponseDto;
 import com.example.traditionalmarket.entity.Market;
 import com.example.traditionalmarket.repository.MarketRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -34,24 +33,23 @@ public class MarketService {
             int count = 0;
 
             for (JsonNode item : records) {
+                String name = item.path("시장명").asText();
                 String address = item.path("소재지도로명주소").asText();
-                if (address.contains("서울")) {
-                    String name = item.path("시장명").asText();
-                    String x = item.path("경도").asText();
-                    String y = item.path("위도").asText();
+                String x = item.path("경도").asText();
+                String y = item.path("위도").asText();
 
-                    Market market = Market.builder()
-                            .name(name)
-                            .address(address)
-                            .x(x)
-                            .y(y)
-                            .build();
+                Market market = Market.builder()
+                        .name(name)
+                        .address(address)
+                        .x(x)
+                        .y(y)
+                        .build();
 
-                    marketRepository.save(market);
-                    count++;
-                }
+                marketRepository.save(market);
+                count++;
             }
-            System.out.println("✅ 서울 전통시장 " + count + "개 저장 완료");
+
+            System.out.println("✅ 전국 전통시장 " + count + "개 저장 완료");
 
         } catch (Exception e) {
             e.printStackTrace();
