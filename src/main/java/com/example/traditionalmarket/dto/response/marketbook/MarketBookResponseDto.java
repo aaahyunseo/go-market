@@ -11,6 +11,5 @@ import java.util.UUID;
 public class MarketBookResponseDto {
     private UUID marketId;
     private String marketName;
-    private boolean visited;
     private LocalDateTime visitedAt;
 }
