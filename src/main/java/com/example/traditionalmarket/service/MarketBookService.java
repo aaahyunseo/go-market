@@ -20,6 +20,7 @@ public class MarketBookService {
     private final MarketRepository marketRepository;
     private final VisitedMarketRepository visitedMarketRepository;
 
+    // 전체 시장 도감 조회
     public MarketBookAllResponseData getAllMarketBook(User user) {
         MarketBook marketBook = user.getMarketBook();
 
@@ -30,6 +31,17 @@ public class MarketBookService {
         return MarketBookAllResponseData.of(allMarkets, visitedMarkets);
     }
 
+    // 지역별 시장 도감 조회
+    public MarketBookAllResponseData getRegionalMarketBook(User user, String region) {
+        MarketBook marketBook = user.getMarketBook();
+
+        List<Market> regionalMarkets = marketRepository.findByAddressContaining(region);
+        List<VisitedMarket> visitedMarkets = visitedMarketRepository.findByMarketBook(marketBook);
+
+        return MarketBookAllResponseData.of(regionalMarkets, visitedMarkets);
+    }
+
+    // 방문한 시장 도감 조회
     public MarketBookResponseData getMarketBook(User user) {
         MarketBook marketBook = user.getMarketBook();
 
