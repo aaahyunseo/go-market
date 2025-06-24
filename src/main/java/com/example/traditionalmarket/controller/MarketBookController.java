@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,6 +28,12 @@ public class MarketBookController {
     }
 
     @GetMapping
+    public ResponseEntity<ResponseDto<MarketBookAllResponseData>> getRegionalMarketBook(@AuthenticatedUser User user, @RequestParam("region") String region) {
+        MarketBookAllResponseData marketBook = marketBookService.getRegionalMarketBook(user, region);
+        return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, region + " 시장도감 조회 완료", marketBook), HttpStatus.OK);
+    }
+
+    @GetMapping("/visited")
     public ResponseEntity<ResponseDto<MarketBookResponseData>> getMarketBook(@AuthenticatedUser User user) {
         MarketBookResponseData marketBook = marketBookService.getMarketBook(user);
         return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "방문 완료한 시장도감 조회 완료", marketBook), HttpStatus.OK);
