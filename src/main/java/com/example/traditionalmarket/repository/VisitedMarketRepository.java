@@ -11,4 +11,5 @@ import java.util.UUID;
 public interface VisitedMarketRepository extends JpaRepository<VisitedMarket, UUID> {
     List<VisitedMarket> findByMarketBook(MarketBook marketBook);
     boolean existsByMarketBookAndMarket(MarketBook marketBook, Market market);
+    Long countByMarketBook(MarketBook marketBook);
 }
