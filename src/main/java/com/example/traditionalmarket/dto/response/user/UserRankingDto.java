@@ -1,4 +1,4 @@
-package com.example.traditionalmarket.dto.response;
+package com.example.traditionalmarket.dto.response.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

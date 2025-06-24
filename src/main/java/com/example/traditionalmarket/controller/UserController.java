@@ -2,8 +2,8 @@ package com.example.traditionalmarket.controller;
 
 import com.example.traditionalmarket.authentication.AuthenticatedUser;
 import com.example.traditionalmarket.dto.ResponseDto;
-import com.example.traditionalmarket.dto.response.UserRankingResponse;
-import com.example.traditionalmarket.dto.response.UserResponseDto;
+import com.example.traditionalmarket.dto.response.user.UserRankingResponse;
+import com.example.traditionalmarket.dto.response.user.UserResponseDto;
 import com.example.traditionalmarket.entity.User;
 import com.example.traditionalmarket.service.UserService;
 import lombok.RequiredArgsConstructor;

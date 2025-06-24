@@ -2,9 +2,9 @@ package com.example.traditionalmarket.service;
 
 import com.example.traditionalmarket.authentication.PasswordHashEncryption;
 import com.example.traditionalmarket.dto.request.user.DeleteUserDto;
-import com.example.traditionalmarket.dto.response.UserRankingDto;
-import com.example.traditionalmarket.dto.response.UserRankingResponse;
-import com.example.traditionalmarket.dto.response.UserResponseDto;
+import com.example.traditionalmarket.dto.response.user.UserRankingDto;
+import com.example.traditionalmarket.dto.response.user.UserRankingResponse;
+import com.example.traditionalmarket.dto.response.user.UserResponseDto;
 import com.example.traditionalmarket.entity.MarketBook;
 import com.example.traditionalmarket.entity.User;
 import com.example.traditionalmarket.exception.ConflictException;
