@@ -2,6 +2,7 @@ package com.example.traditionalmarket.controller;
 
 import com.example.traditionalmarket.authentication.AuthenticatedUser;
 import com.example.traditionalmarket.dto.ResponseDto;
+import com.example.traditionalmarket.dto.response.UserRankingResponse;
 import com.example.traditionalmarket.dto.response.UserResponseDto;
 import com.example.traditionalmarket.entity.User;
 import com.example.traditionalmarket.service.UserService;
@@ -22,5 +23,11 @@ public class UserController {
     public ResponseEntity<ResponseDto<UserResponseDto>> getUserInfo(@AuthenticatedUser User user) {
         UserResponseDto userResponseDto = userService.getUserInfo(user);
         return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "유저 정보 조회 완료", userResponseDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/rank")
+    public ResponseEntity<ResponseDto<UserRankingResponse>> getUserRank(@AuthenticatedUser User user) {
+        UserRankingResponse response = userService.getUserRanking(user);
+        return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "유저 랭킹 조회 완료", response), HttpStatus.OK);
     }
 }
