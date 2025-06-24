@@ -25,34 +25,48 @@ public class VisitedMarketService {
     public void addVisitedMarket(User user, VisitedMarketDto dto) {
         double userX = Double.parseDouble(dto.getX());
         double userY = Double.parseDouble(dto.getY());
-        String marketName = dto.getMarketName();
 
-        Market market = marketRepository.findByName(marketName)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.MARKET_NAME_NOT_FOUND));
+        // 모든 시장을 조회해서 거리 계산
+        Market closestMarket = null;
+        double minDistance = Double.MAX_VALUE;
 
-        double marketX = Double.parseDouble(market.getX().trim());
-        double marketY = Double.parseDouble(market.getY().trim());
+        for (Market market : marketRepository.findAll()) {
+            String mx = market.getX();
+            String my = market.getY();
 
-        double distance = calculateDistance(userY, userX, marketY, marketX);
+            if (mx == null || my == null || mx.isBlank() || my.isBlank()) continue;
 
-        if (distance <= 100) {
-            MarketBook marketBook = user.getMarketBook();
+            double marketX = Double.parseDouble(mx.trim());
+            double marketY = Double.parseDouble(my.trim());
 
-            if (visitedMarketRepository.existsByMarketBookAndMarket(marketBook, market)) {
-                throw new ConflictException(ErrorCode.DUPLICATED_MARKET);
+            double distance = calculateDistance(userY, userX, marketY, marketX);
+
+            if (distance <= 100 && distance < minDistance) {
+                minDistance = distance;
+                closestMarket = market;
             }
+        }
 
-            VisitedMarket visitedMarket = VisitedMarket.builder()
-                    .marketBook(marketBook)
-                    .market(market)
-                    .visitedAt(LocalDateTime.now())
-                    .build();
-
-            visitedMarketRepository.save(visitedMarket);
-        } else {
+        // 조건에 맞는 시장이 없다면 예외
+        if (closestMarket == null) {
             throw new NotFoundException(ErrorCode.MARKET_LOC_NOT_FOUND);
         }
 
+        MarketBook marketBook = user.getMarketBook();
+
+        // 이미 방문한 시장인지 확인
+        if (visitedMarketRepository.existsByMarketBookAndMarket(marketBook, closestMarket)) {
+            throw new ConflictException(ErrorCode.DUPLICATED_MARKET);
+        }
+
+        // 방문 정보 저장
+        VisitedMarket visitedMarket = VisitedMarket.builder()
+                .marketBook(marketBook)
+                .market(closestMarket)
+                .visitedAt(LocalDateTime.now())
+                .build();
+
+        visitedMarketRepository.save(visitedMarket);
     }
 
     // 현재 위치 오차 범위 100m 허용 (Haversine 공식)

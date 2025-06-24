@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -16,9 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class MarketController {
     private final MarketService marketService;
 
-    @GetMapping
-    public ResponseEntity<ResponseDto<MarketResponseData>> getUserInfo() {
+    @GetMapping("/all")
+    public ResponseEntity<ResponseDto<MarketResponseData>> getAllMarkets() {
         MarketResponseData markets = marketService.getAllMarkets();
-        return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "전통시장 리스트 조회 완료", markets), HttpStatus.OK);
+        return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "전체 전통시장 리스트 조회 완료", markets), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponseDto<MarketResponseData>> getMarketsByRegion(@RequestParam("region") String region) {
+        MarketResponseData markets = marketService.getRegionalMarkets(region);
+        return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, region + " 전통시장 리스트 조회 완료", markets), HttpStatus.OK);
     }
 }

@@ -8,8 +8,9 @@ import java.util.UUID;
 
 @Getter
 @Builder
-public class MarketBookResponseDto {
+public class MarketBookAllResponseDto {
     private UUID marketId;
     private String marketName;
+    private boolean visited;
     private LocalDateTime visitedAt;
 }
