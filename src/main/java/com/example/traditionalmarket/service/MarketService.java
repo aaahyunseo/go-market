@@ -61,4 +61,9 @@ public class MarketService {
         List<Market> markets = marketRepository.findAll();
         return MarketResponseData.of(markets);
     }
+
+    public MarketResponseData getRegionalMarkets(String region) {
+        List<Market> markets = marketRepository.findByAddressContaining(region);
+        return MarketResponseData.of(markets);
+    }
 }
