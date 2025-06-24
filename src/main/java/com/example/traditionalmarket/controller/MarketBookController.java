@@ -6,6 +6,7 @@ import com.example.traditionalmarket.dto.response.marketbook.MarketBookAllRespon
 import com.example.traditionalmarket.dto.response.marketbook.MarketBookResponseData;
 import com.example.traditionalmarket.entity.User;
 import com.example.traditionalmarket.service.MarketBookService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,18 +22,21 @@ public class MarketBookController {
 
     private final MarketBookService marketBookService;
 
+    @Operation(summary = "전체 시장도감 조회", description = "모든 지역에 대한 유저의 전체 시장도감 목록이 조회됩니다.")
     @GetMapping("/all")
     public ResponseEntity<ResponseDto<MarketBookAllResponseData>> getAllMarketBook(@AuthenticatedUser User user) {
         MarketBookAllResponseData marketBook = marketBookService.getAllMarketBook(user);
         return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "전체 시장도감 조회 완료", marketBook), HttpStatus.OK);
     }
 
+    @Operation(summary = "지역별 시장도감 조회", description = "유저가 선택한 지역별 시장도감 목록이 조회됩니다.")
     @GetMapping
     public ResponseEntity<ResponseDto<MarketBookAllResponseData>> getRegionalMarketBook(@AuthenticatedUser User user, @RequestParam("region") String region) {
         MarketBookAllResponseData marketBook = marketBookService.getRegionalMarketBook(user, region);
         return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, region + " 시장도감 조회 완료", marketBook), HttpStatus.OK);
     }
 
+    @Operation(summary = "방문한 시장도감 조회", description = "유저가 방문한 시장도감 목록이 조회됩니다.")
     @GetMapping("/visited")
     public ResponseEntity<ResponseDto<MarketBookResponseData>> getMarketBook(@AuthenticatedUser User user) {
         MarketBookResponseData marketBook = marketBookService.getMarketBook(user);
