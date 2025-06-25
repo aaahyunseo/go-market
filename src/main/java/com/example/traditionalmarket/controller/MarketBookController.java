@@ -3,6 +3,7 @@ package com.example.traditionalmarket.controller;
 import com.example.traditionalmarket.authentication.AuthenticatedUser;
 import com.example.traditionalmarket.dto.ResponseDto;
 import com.example.traditionalmarket.dto.response.marketbook.MarketBookAllResponseData;
+import com.example.traditionalmarket.dto.response.marketbook.MarketBookRegionalResponseData;
 import com.example.traditionalmarket.dto.response.marketbook.MarketBookResponseData;
 import com.example.traditionalmarket.entity.User;
 import com.example.traditionalmarket.service.MarketBookService;
@@ -31,8 +32,8 @@ public class MarketBookController {
 
     @Operation(summary = "지역별 시장도감 조회", description = "유저가 선택한 지역별 시장도감 목록이 조회됩니다.")
     @GetMapping
-    public ResponseEntity<ResponseDto<MarketBookAllResponseData>> getRegionalMarketBook(@AuthenticatedUser User user, @RequestParam("region") String region) {
-        MarketBookAllResponseData marketBook = marketBookService.getRegionalMarketBook(user, region);
+    public ResponseEntity<ResponseDto<MarketBookRegionalResponseData>> getRegionalMarketBook(@AuthenticatedUser User user, @RequestParam("region") String region) {
+        MarketBookRegionalResponseData marketBook = marketBookService.getRegionalMarketBook(user, region);
         return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, region + " 시장도감 조회 완료", marketBook), HttpStatus.OK);
     }
 
