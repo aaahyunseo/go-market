@@ -1,6 +1,7 @@
 package com.example.traditionalmarket.service;
 
 import com.example.traditionalmarket.dto.response.marketbook.MarketBookAllResponseData;
+import com.example.traditionalmarket.dto.response.marketbook.MarketBookRegionalResponseData;
 import com.example.traditionalmarket.dto.response.marketbook.MarketBookResponseData;
 import com.example.traditionalmarket.entity.Market;
 import com.example.traditionalmarket.entity.MarketBook;
@@ -32,13 +33,13 @@ public class MarketBookService {
     }
 
     // 지역별 시장 도감 조회
-    public MarketBookAllResponseData getRegionalMarketBook(User user, String region) {
+    public MarketBookRegionalResponseData getRegionalMarketBook(User user, String region) {
         MarketBook marketBook = user.getMarketBook();
 
         List<Market> regionalMarkets = marketRepository.findByAddressContaining(region);
         List<VisitedMarket> visitedMarkets = visitedMarketRepository.findByMarketBook(marketBook);
 
-        return MarketBookAllResponseData.of(regionalMarkets, visitedMarkets);
+        return MarketBookRegionalResponseData.of(regionalMarkets, visitedMarkets);
     }
 
     // 방문한 시장 도감 조회
