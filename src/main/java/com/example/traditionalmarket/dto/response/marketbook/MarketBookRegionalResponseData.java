@@ -46,6 +46,8 @@ public class MarketBookRegionalResponseData {
                 .map(market -> MarketBookAllResponseDto.builder()
                         .marketId(market.getId())
                         .marketName(market.getName())
+                        .x(market.getX())
+                        .y(market.getY())
                         .visited(visitMap.containsKey(market.getId()))
                         .visitedAt(visitMap.get(market.getId()))
                         .build())
