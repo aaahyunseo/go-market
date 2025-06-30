@@ -46,7 +46,7 @@ public class MarketBookController {
     }
 
     @Operation(summary = "모든 지역 시장도감 진행률 조회", description = "유저의 모든 지역 시장도감 진행률 목록이 조회됩니다.")
-    @GetMapping("/region")
+    @GetMapping("/mypage")
     public ResponseEntity<ResponseDto<MarketBookRegionProgressData>> getRegionProgress(@AuthenticatedUser User user) {
         MarketBookRegionProgressData marketBookRegionProgressData = marketBookService.getUserRegionProgress(user);
         return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "모든 지역 시장도감 진행률 조회 완료", marketBookRegionProgressData), HttpStatus.OK);
