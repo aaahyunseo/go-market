@@ -22,7 +22,7 @@ public class VisitedMarketService {
     private final VisitedMarketRepository visitedMarketRepository;
     private final MarketRepository marketRepository;
 
-    public void addVisitedMarket(User user, VisitedMarketDto dto) {
+    public String addVisitedMarket(User user, VisitedMarketDto dto) {
         double userX = Double.parseDouble(dto.getX());
         double userY = Double.parseDouble(dto.getY());
 
@@ -67,6 +67,8 @@ public class VisitedMarketService {
                 .build();
 
         visitedMarketRepository.save(visitedMarket);
+
+        return closestMarket.getName();
     }
 
     // 현재 위치 오차 범위 100m 허용 (Haversine 공식)

@@ -25,8 +25,8 @@ public class VisitedMarketController {
     @Operation(summary = "방문한 시장 등록", description = "GPS의 x,y좌표를 시장의 위치와 비교해 방문한 시장을 등록합니다.")
     @PostMapping
     public ResponseEntity<ResponseDto<Void>> addVisitedMarket(@Parameter(hidden = true) @AuthenticatedUser User user, @RequestBody @Valid VisitedMarketDto dto) {
-        visitedMarketService.addVisitedMarket(user, dto);
-        return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "방문한 시장 등록 완료"), HttpStatus.CREATED);
+        String marketName = visitedMarketService.addVisitedMarket(user, dto);
+        return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, marketName + " 등록 완료"), HttpStatus.CREATED);
     }
 
 }
