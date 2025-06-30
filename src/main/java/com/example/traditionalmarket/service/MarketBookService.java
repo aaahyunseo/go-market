@@ -1,8 +1,6 @@
 package com.example.traditionalmarket.service;
 
-import com.example.traditionalmarket.dto.response.marketbook.MarketBookAllResponseData;
-import com.example.traditionalmarket.dto.response.marketbook.MarketBookRegionalResponseData;
-import com.example.traditionalmarket.dto.response.marketbook.MarketBookResponseData;
+import com.example.traditionalmarket.dto.response.marketbook.*;
 import com.example.traditionalmarket.entity.Market;
 import com.example.traditionalmarket.entity.MarketBook;
 import com.example.traditionalmarket.entity.User;
@@ -50,5 +48,15 @@ public class MarketBookService {
 
         return MarketBookResponseData.of(visitedMarkets);
     }
-}
 
+    // 지역별 시장 도감 진행률 조회
+    public MarketBookRegionProgressData getUserRegionProgress(User user) {
+        MarketBook marketBook = user.getMarketBook();
+
+        List<Market> allMarkets = marketRepository.findAll();
+        List<VisitedMarket> visitedMarkets = visitedMarketRepository.findByMarketBook(marketBook);
+
+        return MarketBookRegionProgressData.of(allMarkets, visitedMarkets);
+    }
+
+}
