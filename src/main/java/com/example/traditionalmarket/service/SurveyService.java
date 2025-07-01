@@ -4,7 +4,11 @@ import com.example.traditionalmarket.dto.request.survey.RecommendRequestDto;
 import com.example.traditionalmarket.dto.request.survey.SurveyAnswerDto;
 import com.example.traditionalmarket.dto.response.survey.RecommendResponseDto;
 import com.example.traditionalmarket.dto.response.survey.SurveyQuestionResponseData;
+import com.example.traditionalmarket.entity.Market;
 import com.example.traditionalmarket.entity.Survey;
+import com.example.traditionalmarket.exception.NotFoundException;
+import com.example.traditionalmarket.exception.errorcode.ErrorCode;
+import com.example.traditionalmarket.repository.MarketRepository;
 import com.example.traditionalmarket.repository.SurveyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +27,7 @@ public class SurveyService {
 
     private final RestTemplate restTemplate;
     private final SurveyRepository surveyRepository;
+    private final MarketRepository marketRepository;
 
     @Value("${ai.api.url}")
     private String aiBaseUrl;
@@ -69,32 +74,55 @@ public class SurveyService {
         return SurveyQuestionResponseData.from(surveys);
     }
 
-    public String getScoreBasedRecommendation(SurveyAnswerDto surveyAnswerDto) {
+    // 점수 기반 AI 시장 추천 받기
+    public RecommendResponseDto getScoreBasedRecommendation(SurveyAnswerDto surveyAnswerDto) {
         String url = aiBaseUrl + "/recommend/score";
 
         RecommendRequestDto aiRequest = convertToAiRequest(surveyAnswerDto);
 
         try {
-            RecommendResponseDto response = restTemplate.postForObject(url, aiRequest, RecommendResponseDto.class);
-            return response.getRecommendedMarket();
+            RecommendResponseDto aiResponse = restTemplate.postForObject(url, aiRequest, RecommendResponseDto.class);
+            String marketName = aiResponse.getRecommendedMarket();
+
+            Market market = marketRepository.findByName(marketName)
+                    .orElseThrow(() -> new NotFoundException(ErrorCode.MARKET_NAME_NOT_FOUND));
+
+            return RecommendResponseDto.builder()
+                    .recommendedMarket(market.getName())
+                    .x(market.getX())
+                    .y(market.getY())
+                    .build();
+
         } catch (Exception e) {
             throw new RuntimeException("AI 추천 서버 호출 실패", e);
         }
     }
 
-    public String getRagBasedRecommendation(SurveyAnswerDto surveyAnswerDto) {
+    // RAG 기반 AI 시장 추천 받기
+    public RecommendResponseDto getRagBasedRecommendation(SurveyAnswerDto surveyAnswerDto) {
         String url = aiBaseUrl + "/recommend/rag";
 
         RecommendRequestDto aiRequest = convertToAiRequest(surveyAnswerDto);
 
         try {
-            RecommendResponseDto response = restTemplate.postForObject(url, aiRequest, RecommendResponseDto.class);
-            return response.getRecommendedMarket();
+            RecommendResponseDto aiResponse = restTemplate.postForObject(url, aiRequest, RecommendResponseDto.class);
+            String marketName = aiResponse.getRecommendedMarket();
+
+            Market market = marketRepository.findByName(marketName)
+                    .orElseThrow(() -> new NotFoundException(ErrorCode.MARKET_NAME_NOT_FOUND));
+
+            return RecommendResponseDto.builder()
+                    .recommendedMarket(market.getName())
+                    .x(market.getX())
+                    .y(market.getY())
+                    .build();
+
         } catch (Exception e) {
             throw new RuntimeException("AI RAG 추천 서버 호출 실패", e);
         }
     }
 
+    // 프론트에서 받은 request와 AI로 전달할 request 매핑
     public RecommendRequestDto convertToAiRequest(SurveyAnswerDto dto) {
         Map<String, String> map = dto.getAnswers();
 
