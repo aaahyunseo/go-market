@@ -2,6 +2,7 @@ package com.example.traditionalmarket.controller;
 
 import com.example.traditionalmarket.dto.ResponseDto;
 import com.example.traditionalmarket.dto.request.survey.SurveyAnswerDto;
+import com.example.traditionalmarket.dto.response.survey.RecommendResponseDto;
 import com.example.traditionalmarket.dto.response.survey.SurveyQuestionResponseData;
 import com.example.traditionalmarket.service.SurveyService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,15 +26,15 @@ public class SurveyController {
 
     @Operation(summary = "점수 기반 AI 시장 추천받기", description = "점수 기반으로 AI의 시장 추천을 받습니다.")
     @PostMapping("/score")
-    public ResponseEntity<ResponseDto<String>> getScoreBasedRecommendation(@RequestBody SurveyAnswerDto surveyAnswerDto) {
-        String result = surveyService.getScoreBasedRecommendation(surveyAnswerDto);
+    public ResponseEntity<ResponseDto<RecommendResponseDto>> getScoreBasedRecommendation(@RequestBody SurveyAnswerDto surveyAnswerDto) {
+        RecommendResponseDto result = surveyService.getScoreBasedRecommendation(surveyAnswerDto);
         return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "점수 기반 추천 완료", result), HttpStatus.OK);
     }
 
     @Operation(summary = "RAG 기반 AI 시장 추천받기", description = "RAG 기반으로 AI의 시장 추천을 받습니다.")
     @PostMapping("/rag")
-    public ResponseEntity<ResponseDto<String>> getRagBasedRecommendation(@RequestBody SurveyAnswerDto surveyAnswerDto) {
-        String result = surveyService.getRagBasedRecommendation(surveyAnswerDto);
+    public ResponseEntity<ResponseDto<RecommendResponseDto>> getRagBasedRecommendation(@RequestBody SurveyAnswerDto surveyAnswerDto) {
+        RecommendResponseDto result = surveyService.getRagBasedRecommendation(surveyAnswerDto);
         return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "RAG 기반 추천 완료", result), HttpStatus.OK);
     }
 }
