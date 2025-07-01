@@ -9,4 +9,5 @@ public class UserResponseDto {
     private String userId;
     private String name;
     private Long visitMarketCount;
+    private Long rank;
 }
