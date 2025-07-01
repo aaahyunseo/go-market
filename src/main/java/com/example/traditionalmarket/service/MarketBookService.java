@@ -1,5 +1,6 @@
 package com.example.traditionalmarket.service;
 
+import com.example.traditionalmarket.dto.request.marketbook.MarketBookRequestDto;
 import com.example.traditionalmarket.dto.response.marketbook.*;
 import com.example.traditionalmarket.entity.Market;
 import com.example.traditionalmarket.entity.MarketBook;
@@ -61,18 +62,14 @@ public class MarketBookService {
         return MarketBookRegionProgressData.of(allMarkets, visitedMarkets);
     }
 
-    public MarketBookRegionalResponseData getRegionalMarketBookByMarketName(User user, String marketName) {
-        MarketBook marketBook = user.getMarketBook();
-
-        Market market = marketRepository.findByName(marketName)
+    // 방문한 시장 이름 기반 지역명 조회
+    public RegionResponseDto getRegionByMarketName(MarketBookRequestDto marketBookRequestDto) {
+        Market market = marketRepository.findByName(marketBookRequestDto.getMarketName())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.MARKET_NAME_NOT_FOUND));
 
         String region = extractRegionFromAddress(market.getAddress());
 
-        List<Market> regionalMarkets = marketRepository.findByAddressContaining(region);
-        List<VisitedMarket> visitedMarkets = visitedMarketRepository.findByMarketBook(marketBook);
-
-        return MarketBookRegionalResponseData.of(regionalMarkets, visitedMarkets);
+        return new RegionResponseDto(region);
     }
 
     private String extractRegionFromAddress(String address) {
