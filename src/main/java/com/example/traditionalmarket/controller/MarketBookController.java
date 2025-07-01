@@ -2,6 +2,7 @@ package com.example.traditionalmarket.controller;
 
 import com.example.traditionalmarket.authentication.AuthenticatedUser;
 import com.example.traditionalmarket.dto.ResponseDto;
+import com.example.traditionalmarket.dto.request.marketbook.MarketBookRequestDto;
 import com.example.traditionalmarket.dto.response.marketbook.MarketBookAllResponseData;
 import com.example.traditionalmarket.dto.response.marketbook.MarketBookRegionProgressData;
 import com.example.traditionalmarket.dto.response.marketbook.MarketBookRegionalResponseData;
@@ -9,13 +10,11 @@ import com.example.traditionalmarket.dto.response.marketbook.MarketBookResponseD
 import com.example.traditionalmarket.entity.User;
 import com.example.traditionalmarket.service.MarketBookService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,5 +49,14 @@ public class MarketBookController {
     public ResponseEntity<ResponseDto<MarketBookRegionProgressData>> getRegionProgress(@AuthenticatedUser User user) {
         MarketBookRegionProgressData marketBookRegionProgressData = marketBookService.getUserRegionProgress(user);
         return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "모든 지역 시장도감 진행률 조회 완료", marketBookRegionProgressData), HttpStatus.OK);
+    }
+
+    @Operation(summary = "방문 시장명 기반 지역별 시장도감 조회", description = "클릭한 시장 이름을 보내면 해당 시장 지역의 시장도감이 조회됩니다.")
+    @PostMapping("/region-by-market")
+    public ResponseEntity<ResponseDto<MarketBookRegionalResponseData>> getRegionalMarketBookByMarketName(
+            @AuthenticatedUser User user,
+            @Valid @RequestBody MarketBookRequestDto requestDto) {
+        MarketBookRegionalResponseData marketBook = marketBookService.getRegionalMarketBookByMarketName(user, requestDto.getMarketName());
+        return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, requestDto.getMarketName() + " 지역 시장도감 조회 완료", marketBook), HttpStatus.OK);
     }
 }
