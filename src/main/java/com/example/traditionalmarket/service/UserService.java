@@ -33,16 +33,39 @@ public class UserService {
         MarketBook marketBook = user.getMarketBook();
         Long visitedCount = visitedMarketRepository.countByMarketBook(marketBook);
 
-        UserResponseDto userResponseDto = UserResponseDto.builder()
+        List<UserRankingDto> sortedList = calculateUserRankings();
+
+        Long myRank = sortedList.stream()
+                .filter(dto -> dto.getUserName().equals(user.getName()))
+                .map(dto -> (long) dto.getRank())
+                .findFirst()
+                .orElse(0L);
+
+        return UserResponseDto.builder()
                 .userId(user.getUserId())
                 .name(user.getName())
                 .visitMarketCount(visitedCount)
+                .rank(myRank)
                 .build();
-        return userResponseDto;
     }
 
     // 랭킹 조회
     public UserRankingResponse getUserRanking(User currentUser) {
+        List<UserRankingDto> sortedList = calculateUserRankings();
+
+        UserRankingDto myRank = sortedList.stream()
+                .filter(dto -> dto.getUserName().equals(currentUser.getName()))
+                .findFirst()
+                .orElse(UserRankingDto.builder()
+                        .rank(0)
+                        .userName(currentUser.getName())
+                        .visitMarketCount(0)
+                        .build());
+
+        return new UserRankingResponse(sortedList, myRank);
+    }
+
+    private List<UserRankingDto> calculateUserRankings() {
         List<User> users = userRepository.findAll().stream()
                 .filter(u -> u.getMarketBook() != null)
                 .toList();
@@ -77,16 +100,7 @@ public class UserService {
             rank++;
         }
 
-        UserRankingDto myRank = sortedList.stream()
-                .filter(dto -> dto.getUserName().equals(currentUser.getName()))
-                .findFirst()
-                .orElse(UserRankingDto.builder()
-                        .rank(0)
-                        .userName(currentUser.getName())
-                        .visitMarketCount(0)
-                        .build());
-
-        return new UserRankingResponse(sortedList, myRank);
+        return sortedList;
     }
 
     public void deleteUser(User user, DeleteUserDto deleteUserDto) {
