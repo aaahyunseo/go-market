@@ -68,17 +68,17 @@ public class MarketBookRegionProgressData {
             case "대전광역시": return "대전";
             case "울산광역시": return "울산";
             case "세종특별자치시": return "세종";
-            case "경기도": return "경기";
-            case "강원특별자치도": return "강원";
-            case "충청북도": return "충북";
-            case "충청남도": return "충남";
-            case "전북특별자치도": return "전북";
+            case "경기도": return "경기도";
+            case "강원특별자치도": return "강원도";
+            case "충청북도": return "충청북도";
+            case "충청남도": return "충청남도";
+            case "전북특별자치도": return "전라북도";
             case "전라남도":
-            case "전남": return "전남";
+            case "전남": return "전라남도";
             case "경상북도":
-            case "경북": return "경북";
-            case "경상남도": return "경남";
-            case "제주특별자치도": return "제주";
+            case "경북": return "경상북도";
+            case "경상남도": return "경상남도";
+            case "제주특별자치도": return "제주도";
             default: return rawRegion;
         }
     }
