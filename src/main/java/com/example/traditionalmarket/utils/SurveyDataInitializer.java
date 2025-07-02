@@ -1,4 +1,4 @@
-package com.example.traditionalmarket.controller;
+package com.example.traditionalmarket.utils;
 
 import com.example.traditionalmarket.service.SurveyService;
 import lombok.RequiredArgsConstructor;
