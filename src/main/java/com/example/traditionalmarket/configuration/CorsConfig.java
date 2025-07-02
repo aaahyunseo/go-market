@@ -27,7 +27,7 @@ public class CorsConfig implements WebMvcConfigurer {
         clientHosts.forEach(config::addAllowedOrigin);
         allowedMethods.forEach(config::addAllowedMethod);
         config.setAllowCredentials(true);
-        config.addAllowedHeader("https://market-gogo.netlify.app,https://market-gogo.com,https://localhost:3000,https://api.market-gogo.com");
+        config.addAllowedHeader("*");
         config.setMaxAge(MAX_AGE_SECS);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -41,7 +41,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://api.market-gogo.com", "http://localhost:3000") // 클라이언트 도메인
+                .allowedOrigins("https://market-gogo.netlify.app", "https://api.market-gogo.com", "http://localhost:3000") // 클라이언트 도메인
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowCredentials(true);
     }
