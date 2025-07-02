@@ -12,18 +12,17 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 @AllArgsConstructor
 public class JwtEncoder {
-    public static final String TOKEN_TYPE = "Bearer ";
+    public static final String TOKEN_TYPE = "Bearer_";
 
     public static String encode(String token) {
-        String cookieValue = TOKEN_TYPE + token;
-        return URLEncoder.encode(cookieValue, StandardCharsets.UTF_8).replace("+", "%20");
+        return TOKEN_TYPE + token;
     }
 
     public static String decode(String cookieValue) {
-        String value = URLDecoder.decode(cookieValue, StandardCharsets.UTF_8);
-        if (value.startsWith(TOKEN_TYPE)) {
-            return value.substring(TOKEN_TYPE.length());
+        if (cookieValue.startsWith(TOKEN_TYPE)) {
+            return cookieValue.substring(TOKEN_TYPE.length());
         }
         throw new UnauthorizedException(ErrorCode.INVALID_TOKEN);
     }
 }
+
