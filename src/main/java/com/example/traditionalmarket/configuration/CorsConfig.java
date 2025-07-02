@@ -29,7 +29,7 @@ public class CorsConfig {
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        clientHosts.forEach(config::addAllowedOrigin);
+        clientHosts.forEach(config::addAllowedOriginPattern);
 
         config.setAllowCredentials(true);                // 쿠키 포함 허용
         config.setAllowedHeaders(List.of("*"));          // 모든 헤더 허용
