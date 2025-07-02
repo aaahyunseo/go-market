@@ -10,6 +10,7 @@ import com.example.traditionalmarket.exception.NotFoundException;
 import com.example.traditionalmarket.exception.errorcode.ErrorCode;
 import com.example.traditionalmarket.repository.MarketRepository;
 import com.example.traditionalmarket.repository.SurveyRepository;
+import com.example.traditionalmarket.utils.RegionUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -87,10 +88,13 @@ public class SurveyService {
             Market market = marketRepository.findByName(marketName)
                     .orElseThrow(() -> new NotFoundException(ErrorCode.MARKET_NAME_NOT_FOUND));
 
+            String region = RegionUtils.extractRegionFromAddress(market.getAddress());
+
             return RecommendResponseDto.builder()
                     .recommendedMarket(market.getName())
                     .x(market.getX())
                     .y(market.getY())
+                    .region(region)
                     .build();
 
         } catch (Exception e) {
@@ -111,10 +115,13 @@ public class SurveyService {
             Market market = marketRepository.findByName(marketName)
                     .orElseThrow(() -> new NotFoundException(ErrorCode.MARKET_NAME_NOT_FOUND));
 
+            String region = RegionUtils.extractRegionFromAddress(market.getAddress());
+
             return RecommendResponseDto.builder()
                     .recommendedMarket(market.getName())
                     .x(market.getX())
                     .y(market.getY())
+                    .region(region)
                     .build();
 
         } catch (Exception e) {
