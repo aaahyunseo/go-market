@@ -38,7 +38,17 @@ public class MarketBookService {
     public MarketBookRegionalResponseData getRegionalMarketBook(User user, String region) {
         MarketBook marketBook = user.getMarketBook();
 
-        List<Market> regionalMarkets = marketRepository.findByAddressContaining(region);
+        List<Market> allMarkets = marketRepository.findAll();
+
+        String normalizedRegion = RegionUtils.extractRegionFromAddress(region);
+
+        List<Market> regionalMarkets = allMarkets.stream()
+                .filter(market -> {
+                    String marketRegion = RegionUtils.extractRegionFromAddress(market.getAddress());
+                    return marketRegion.equals(normalizedRegion);
+                })
+                .toList();
+
         List<VisitedMarket> visitedMarkets = visitedMarketRepository.findByMarketBook(marketBook);
 
         return MarketBookRegionalResponseData.of(regionalMarkets, visitedMarkets);
