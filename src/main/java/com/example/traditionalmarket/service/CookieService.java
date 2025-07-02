@@ -17,7 +17,8 @@ public class CookieService {
                 .maxAge(Duration.ofMinutes(120))
                 .path("/")
                 .httpOnly(true)
-                .sameSite("None").secure(true)
+                .sameSite("None")
+                .secure(true)
                 .build();
 
         response.addHeader("Set-Cookie", cookie.toString());
