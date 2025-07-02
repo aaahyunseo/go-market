@@ -14,7 +14,7 @@ public class CookieService {
 
     public void setCookie(HttpServletResponse response, String accessToken) {
         ResponseCookie cookie = ResponseCookie.from(AuthenticationExtractor.TOKEN_COOKIE_NAME, accessToken)
-                .maxAge(Duration.ofMillis(1800000*4))
+                .maxAge(Duration.ofMinutes(120))
                 .path("/")
                 .httpOnly(true)
                 .sameSite("None").secure(true)
