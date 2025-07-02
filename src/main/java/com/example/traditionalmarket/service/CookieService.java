@@ -20,7 +20,7 @@ public class CookieService {
                 .sameSite("None").secure(true)
                 .build();
 
-        response.addHeader("set-cookie", cookie.toString());
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 
 }
