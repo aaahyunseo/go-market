@@ -13,4 +13,5 @@ public class RecommendResponseDto {
     private String recommendedMarket;
     private String x;
     private String y;
+    private String region;
 }
