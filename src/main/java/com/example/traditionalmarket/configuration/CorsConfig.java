@@ -41,7 +41,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://api.market.com", "http://localhost:3000") // 클라이언트 도메인
+                .allowedOrigins("https://api.market-gogo.com", "http://localhost:3000") // 클라이언트 도메인
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowCredentials(true);
     }
