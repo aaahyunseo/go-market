@@ -14,7 +14,7 @@ import java.util.List;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
     private final long MAX_AGE_SECS = 3600L;
-    @Value("${client.host}")
+    @Value("#{'${client.host}'.split(',')}")
     private List<String> clientHosts;
     private final List<String> allowedMethods = List.of(
             "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD", "TRACE"
