@@ -27,7 +27,7 @@ public class CorsConfig implements WebMvcConfigurer {
         clientHosts.forEach(config::addAllowedOrigin);
         allowedMethods.forEach(config::addAllowedMethod);
         config.setAllowCredentials(true);
-        config.addAllowedHeader("*");
+        config.addAllowedHeader("https://market-gogo.netlify.app,https://market-gogo.com,https://localhost:3000,https://api.market-gogo.com");
         config.setMaxAge(MAX_AGE_SECS);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
