@@ -10,4 +10,5 @@ import java.util.UUID;
 public interface MarketRepository extends JpaRepository<Market, UUID> {
     List<Market> findByAddressContaining(String region);
     Optional<Market> findByName(String marketName);
+    List<Market> findAllByName(String marketName);
 }

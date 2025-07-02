@@ -21,6 +21,7 @@ public enum ErrorCode {
     USER_NOT_FOUND("4041", "유저를 찾을 수 없습니다."),
     MARKET_NAME_NOT_FOUND("4042", "시장 이름을 찾을 수 없습니다."),
     MARKET_LOC_NOT_FOUND("4043", "인근 시장 위치를 찾을 수 없습니다."),
+    RECOMMEND_NOT_FOUND("4044", "추천할 수 있는 시장이 없습니다."),
 
     // ConflictException
     DUPLICATED_NAME("4090", "이미 사용중인 이름입니다."),

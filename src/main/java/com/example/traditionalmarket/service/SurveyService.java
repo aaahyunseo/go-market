@@ -10,8 +10,8 @@ import com.example.traditionalmarket.exception.NotFoundException;
 import com.example.traditionalmarket.exception.errorcode.ErrorCode;
 import com.example.traditionalmarket.repository.MarketRepository;
 import com.example.traditionalmarket.repository.SurveyRepository;
-import com.example.traditionalmarket.utils.RegionUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -24,6 +24,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SurveyService {
 
     private final RestTemplate restTemplate;
@@ -78,54 +79,67 @@ public class SurveyService {
     // 점수 기반 AI 시장 추천 받기
     public RecommendResponseDto getScoreBasedRecommendation(SurveyAnswerDto surveyAnswerDto) {
         String url = aiBaseUrl + "/recommend/score";
-
         RecommendRequestDto aiRequest = convertToAiRequest(surveyAnswerDto);
+        String region = surveyAnswerDto.getAnswers().get("1");
 
-        try {
-            RecommendResponseDto aiResponse = restTemplate.postForObject(url, aiRequest, RecommendResponseDto.class);
-            String marketName = aiResponse.getRecommendedMarket();
-
-            Market market = marketRepository.findByName(marketName)
-                    .orElseThrow(() -> new NotFoundException(ErrorCode.MARKET_NAME_NOT_FOUND));
-
-            String region = RegionUtils.extractRegionFromAddress(market.getAddress());
-
-            return RecommendResponseDto.builder()
-                    .recommendedMarket(market.getName())
-                    .x(market.getX())
-                    .y(market.getY())
-                    .region(region)
-                    .build();
-
-        } catch (Exception e) {
-            throw new RuntimeException("AI 추천 서버 호출 실패", e);
-        }
+        return getRecommendationFromAi(url, aiRequest, region);
     }
 
     // RAG 기반 AI 시장 추천 받기
     public RecommendResponseDto getRagBasedRecommendation(SurveyAnswerDto surveyAnswerDto) {
         String url = aiBaseUrl + "/recommend/rag";
-
         RecommendRequestDto aiRequest = convertToAiRequest(surveyAnswerDto);
+        String region = surveyAnswerDto.getAnswers().get("1");
+
+        return getRecommendationFromAi(url, aiRequest, region);
+    }
+
+    // AI 서버로 요청 및 응답 처리
+    public RecommendResponseDto getRecommendationFromAi(String url, RecommendRequestDto aiRequest, String region) {
 
         try {
             RecommendResponseDto aiResponse = restTemplate.postForObject(url, aiRequest, RecommendResponseDto.class);
-            String marketName = aiResponse.getRecommendedMarket();
 
-            Market market = marketRepository.findByName(marketName)
-                    .orElseThrow(() -> new NotFoundException(ErrorCode.MARKET_NAME_NOT_FOUND));
+            String marketName = aiResponse.getRecommendedMarket().trim();
+            log.info("[AI 추천 시장 이름] : {}", marketName);
 
-            String region = RegionUtils.extractRegionFromAddress(market.getAddress());
+            if ("추천할 수 있는 시장이 없습니다".equals(marketName)) {
+                throw new NotFoundException(ErrorCode.RECOMMEND_NOT_FOUND);
+            }
+
+            // 같은 이름 가진 시장들 모두 조회
+            List<Market> candidates = marketRepository.findAllByName(marketName);
+
+            if (candidates.isEmpty()) {
+                throw new NotFoundException(ErrorCode.MARKET_NAME_NOT_FOUND);
+            }
+
+            // 요청된 지역에 포함되는 시장만 필터링
+            List<Market> filteredByRegion = candidates.stream()
+                    .filter(m -> m.getAddress() != null && m.getAddress().contains(region))
+                    .toList();
+
+            Market selectedMarket;
+
+            if (!filteredByRegion.isEmpty()) {
+                // 같은 이름 중 지역 일치하는 거 있으면 그걸 선택
+                selectedMarket = filteredByRegion.get(0);
+            } else {
+                // 그래도 없으면 일단 첫번째 후보라도 반환 (안그러면 계속 에러 터짐)
+                selectedMarket = candidates.get(0);
+            }
 
             return RecommendResponseDto.builder()
-                    .recommendedMarket(market.getName())
-                    .x(market.getX())
-                    .y(market.getY())
+                    .recommendedMarket(selectedMarket.getName())
+                    .x(selectedMarket.getX())
+                    .y(selectedMarket.getY())
                     .region(region)
                     .build();
 
+        } catch (NotFoundException e) {
+            throw e;
         } catch (Exception e) {
-            throw new RuntimeException("AI RAG 추천 서버 호출 실패", e);
+            throw new RuntimeException("AI 추천 서버 호출 실패", e);
         }
     }
 
