@@ -15,13 +15,13 @@ public class RegionUtils {
         if (prefix.startsWith("울산")) return "울산";
         if (prefix.startsWith("세종")) return "세종";
         if (prefix.startsWith("인천")) return "인천";
-        if (prefix.startsWith("강원")) return "강원";
-        if (prefix.startsWith("충북")) return "충청북도";
-        if (prefix.startsWith("충남")) return "충청남도";
-        if (prefix.startsWith("전북")) return "전라북도";
-        if (prefix.startsWith("전남")) return "전라남도";
-        if (prefix.startsWith("경북")) return "경상북도";
-        if (prefix.startsWith("경남")) return "경상남도";
+        if (prefix.startsWith("강원")) return "강원도";
+        if (prefix.startsWith("충북") || prefix.startsWith("충청북도")) return "충청북도";
+        if (prefix.startsWith("충남") || prefix.startsWith("충청남도")) return "충청남도";
+        if (prefix.startsWith("전북") || prefix.startsWith("전라북도")) return "전라북도";
+        if (prefix.startsWith("전남") || prefix.startsWith("전라남도")) return "전라남도";
+        if (prefix.startsWith("경북") || prefix.startsWith("경상북도")) return "경상북도";
+        if (prefix.startsWith("경남") || prefix.startsWith("경상남도")) return "경상남도";
         if (prefix.startsWith("제주")) return "제주도";
         return "기타";
     }
