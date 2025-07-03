@@ -24,8 +24,6 @@ public class AuthService {
 
     public TokenResponseDto signup(SignupDto signupDto) {
 
-        userService.validateIsDuplicatedName(signupDto.getName());
-
         userService.validateIsDuplicatedUserId(signupDto.getUserId());
 
         String plainPassword = signupDto.getPassword();
