@@ -120,12 +120,6 @@ public class UserService {
         }
     }
 
-    public void validateIsDuplicatedName(String name) {
-        if (userRepository.existsByName(name)) {
-            throw new ConflictException(ErrorCode.DUPLICATED_NAME);
-        }
-    }
-
     public User findExistingUserByUserId(String userId) {
         return userRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException(ErrorCode.INVALID_EMAIL_OR_PASSWORD));
     }
