@@ -3,6 +3,7 @@ package com.example.traditionalmarket.service;
 import com.example.traditionalmarket.dto.response.market.MarketResponseData;
 import com.example.traditionalmarket.entity.Market;
 import com.example.traditionalmarket.repository.MarketRepository;
+import com.example.traditionalmarket.utils.RegionUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -62,8 +63,18 @@ public class MarketService {
         return MarketResponseData.of(markets);
     }
 
+    // 지역별 전통 시장 리스트 조회하기
     public MarketResponseData getRegionalMarkets(String region) {
-        List<Market> markets = marketRepository.findByAddressContaining(region);
-        return MarketResponseData.of(markets);
+        String normalizedRegion = RegionUtils.normalizeRegion(region);
+
+        List<Market> allMarkets = marketRepository.findAll();
+
+        List<Market> filteredMarkets = allMarkets.stream()
+                .filter(market -> {
+                    String marketRegion = RegionUtils.extractRegionFromAddress(market.getAddress()); // "경기도", "세종", 등
+                    return marketRegion.equals(normalizedRegion);
+                })
+                .toList();
+        return MarketResponseData.of(filteredMarkets);
     }
 }
