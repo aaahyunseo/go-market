@@ -1,6 +1,5 @@
 package com.example.traditionalmarket.controller;
 
-import com.example.traditionalmarket.authentication.JwtEncoder;
 import com.example.traditionalmarket.dto.ResponseDto;
 import com.example.traditionalmarket.dto.TokenResponseDto;
 import com.example.traditionalmarket.dto.request.auth.LoginDto;
