@@ -78,7 +78,7 @@ public class SurveyService {
 
     // 점수 기반 AI 시장 추천 받기
     public RecommendResponseDto getScoreBasedRecommendation(SurveyAnswerDto surveyAnswerDto) {
-        String url = aiBaseUrl + "/recommend/score";
+        String url = aiBaseUrl + "/recommend/score+rag";
         RecommendRequestDto aiRequest = convertToAiRequest(surveyAnswerDto);
         String region = surveyAnswerDto.getAnswers().get("1");
 
