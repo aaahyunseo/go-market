@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Slf4j
@@ -36,8 +37,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             User user = findExistingUser(userId);
             authenticationContext.setPrincipal(user);
         } catch (Exception e) {
-            // 토큰은 있었지만 유효하지 않은 경우
             log.warn("Invalid token during authentication: {}", e.getMessage());
+            throw new NotFoundException(ErrorCode.INVALID_TOKEN);
         }
         return true;
     }
