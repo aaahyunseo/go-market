@@ -23,10 +23,13 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String accessToken = AuthenticationExtractor.extract(request);
-        if (accessToken == null || accessToken.isBlank()) {
-            return true; // 로그인 안 된 상태로 통과시킴
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return true;
         }
+
+        String accessToken = authorizationHeader.substring(7);
 
         try {
             UUID userId = UUID.fromString(accessTokenProvider.getPayload(accessToken));
