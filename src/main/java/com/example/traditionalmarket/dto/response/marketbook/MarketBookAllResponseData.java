@@ -2,6 +2,7 @@ package com.example.traditionalmarket.dto.response.marketbook;
 
 import com.example.traditionalmarket.entity.Market;
 import com.example.traditionalmarket.entity.VisitedMarket;
+import com.example.traditionalmarket.utils.RegionUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -30,6 +31,7 @@ public class MarketBookAllResponseData {
                         .marketName(market.getName())
                         .x(market.getX())
                         .y(market.getY())
+                        .region(RegionUtils.extractRegionFromAddress(market.getAddress()))
                         .visited(visitMap.containsKey(market.getId()))
                         .visitedAt(visitMap.get(market.getId()))
                         .build())

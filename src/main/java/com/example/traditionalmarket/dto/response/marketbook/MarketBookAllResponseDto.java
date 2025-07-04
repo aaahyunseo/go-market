@@ -13,6 +13,7 @@ public class MarketBookAllResponseDto {
     private String marketName;
     private String x;
     private String y;
+    private String region;
     private boolean visited;
     private LocalDateTime visitedAt;
 }
