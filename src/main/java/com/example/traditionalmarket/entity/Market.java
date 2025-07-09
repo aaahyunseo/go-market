@@ -33,11 +33,11 @@ public class Market extends BaseEntity {
     @Column
     private String url;
 
-    // 시장 내 상점
-    @OneToMany(mappedBy = "market", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Shop> shops;
-
     // 방문한 시장
     @OneToMany(mappedBy = "market", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VisitedMarket> visitedMarkets;
+
+    // 시장 게시판
+    @OneToMany(mappedBy = "market", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Board> boards;
 }
