@@ -22,11 +22,15 @@ public enum ErrorCode {
     MARKET_NAME_NOT_FOUND("4042", "시장 이름을 찾을 수 없습니다."),
     MARKET_LOC_NOT_FOUND("4043", "인근 시장 위치를 찾을 수 없습니다."),
     RECOMMEND_NOT_FOUND("4044", "추천할 수 있는 시장이 없습니다."),
+    BOARD_NOT_FOUND("4045", "게시글을 찾을 수 없습니다."),
+    REACTION_NOT_FOUND("4046", "좋아요 혹은 싫어요를 찾을 수 없습니다."),
 
     // ConflictException
     DUPLICATED_NAME("4090", "이미 사용중인 이름입니다."),
     DUPLICATED_ID("4091", "이미 사용중인 아이디입니다."),
     DUPLICATED_MARKET("4092", "이미 방문한 장소입니다."),
+    DUPLICATED_LIKE("4093", "이미 좋아요를 누른 게시글입니다."),
+    DUPLICATED_DISLIKE("4094", "이미 싫어요를 누른 게시글입니다."),
 
     // ValidationException
     NOT_NULL("9001", "필수값이 누락되었습니다."),
