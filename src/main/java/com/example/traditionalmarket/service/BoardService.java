@@ -29,8 +29,12 @@ public class BoardService {
 
     // 시장별 게시글 전체 조회하기
     public BoardResponseData getAllBoards(String marketName) {
+        Market market = marketRepository.findByName(marketName)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.MARKET_NAME_NOT_FOUND));
+
         List<Board> boards = boardRepository.findAllByMarketNameOrderByCreatedAtDesc(marketName);
-        return BoardResponseData.of(marketName, boards);
+
+        return BoardResponseData.of(market.getName(), market.getAddress(), boards);
     }
 
     // 게시글 상세 조회하기

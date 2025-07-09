@@ -12,9 +12,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class BoardResponseData {
     private String marketName;
+    private String address;
     private List<BoardResponseDto> boards;
 
-    public static BoardResponseData of(String marketName, List<Board> boards) {
+    public static BoardResponseData of(String marketName, String address, List<Board> boards) {
         List<BoardResponseDto> dtos = boards.stream()
                 .map(board -> BoardResponseDto.builder()
                         .boardId(board.getId())
@@ -27,6 +28,6 @@ public class BoardResponseData {
                         .build())
                 .collect(Collectors.toList());
 
-        return new BoardResponseData(marketName, dtos);
+        return new BoardResponseData(marketName, address, dtos);
     }
 }
