@@ -20,8 +20,8 @@ public class AuthenticationConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor)
-                .addPathPatterns("/users/**", "/market-books/**", "/visited-markets")
-                .excludePathPatterns("/api/**","/markets", "/surveys", "/chats");
+                .addPathPatterns("/users/**", "/market-books/**", "/visited-markets", "/reactions/**", "/boards/**")
+                .excludePathPatterns("/api/**","/markets", "/surveys", "/chats", "/boards/all");
     }
 
     @Override
