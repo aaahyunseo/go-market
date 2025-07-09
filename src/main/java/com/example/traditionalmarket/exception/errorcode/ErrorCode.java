@@ -24,6 +24,7 @@ public enum ErrorCode {
     RECOMMEND_NOT_FOUND("4044", "추천할 수 있는 시장이 없습니다."),
     BOARD_NOT_FOUND("4045", "게시글을 찾을 수 없습니다."),
     REACTION_NOT_FOUND("4046", "좋아요 혹은 싫어요를 찾을 수 없습니다."),
+    COMMENT_NOT_FOUND("4047", "댓글을 찾을 수 없습니다."),
 
     // ConflictException
     DUPLICATED_NAME("4090", "이미 사용중인 이름입니다."),
