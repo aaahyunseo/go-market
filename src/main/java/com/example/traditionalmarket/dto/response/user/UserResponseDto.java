@@ -10,4 +10,5 @@ public class UserResponseDto {
     private String name;
     private Long visitMarketCount;
     private Long rank;
+    private String profileImageUrl;
 }
