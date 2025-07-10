@@ -6,6 +6,7 @@ import com.example.traditionalmarket.dto.response.user.UserRankingDto;
 import com.example.traditionalmarket.dto.response.user.UserRankingResponse;
 import com.example.traditionalmarket.dto.response.user.UserResponseDto;
 import com.example.traditionalmarket.entity.MarketBook;
+import com.example.traditionalmarket.entity.Profile;
 import com.example.traditionalmarket.entity.User;
 import com.example.traditionalmarket.exception.ConflictException;
 import com.example.traditionalmarket.exception.NotFoundException;
@@ -15,7 +16,9 @@ import com.example.traditionalmarket.repository.UserRepository;
 import com.example.traditionalmarket.repository.VisitedMarketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +30,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final VisitedMarketRepository visitedMarketRepository;
     private final PasswordHashEncryption passwordHashEncryption;
+    private final ProfileService profileService;
+
+    private static String PROFILE_IMAGE_URL = "https://gomarket-bucket.s3.ap-northeast-2.amazonaws.com/profile-logo.png";
 
     // 유저 개인 정보 조회
     public UserResponseDto getUserInfo(User user) {
@@ -41,12 +47,28 @@ public class UserService {
                 .findFirst()
                 .orElse(0L);
 
+        Profile profile = user.getProfile();
+        String profileImgUrl = (profile != null && profile.getImageUrl() != null)
+                ? profile.getImageUrl()
+                : PROFILE_IMAGE_URL;
+
         return UserResponseDto.builder()
                 .userId(user.getUserId())
                 .name(user.getName())
                 .visitMarketCount(visitedCount)
                 .rank(myRank)
+                .profileImageUrl(profileImgUrl)
                 .build();
+    }
+
+    // 프로필 이미지 추가
+    public void uploadProfileImage(User user, MultipartFile file) throws IOException {
+        profileService.uploadImages(user, file);
+    }
+
+    // 프로필 이미지 삭제
+    public void deleteProfileImage(User user) throws IOException {
+        profileService.deleteImages(user);
     }
 
     // 랭킹 조회

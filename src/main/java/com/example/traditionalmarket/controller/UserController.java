@@ -10,9 +10,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,5 +33,20 @@ public class UserController {
     public ResponseEntity<ResponseDto<UserRankingResponse>> getUserRank(@AuthenticatedUser User user) {
         UserRankingResponse response = userService.getUserRanking(user);
         return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "유저 랭킹 조회 완료", response), HttpStatus.OK);
+    }
+
+    @Operation(summary = "유저 프로필 사진 등록", description = "유저의 프로필 사진을 등록합니다")
+    @PostMapping("/profile")
+    public ResponseEntity<ResponseDto<Void>> uploadProfileImg(@AuthenticatedUser User user,
+                                                              @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
+        userService.uploadProfileImage(user, image);
+        return new ResponseEntity<>(ResponseDto.res(HttpStatus.CREATED, "유저 프로필 사진 등록 완료"), HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "유저 프로필 사진 삭제", description = "유저의 프로필 사진을 삭제합니다")
+    @DeleteMapping("/profile")
+    public ResponseEntity<ResponseDto<Void>> deleteProfileImg(@AuthenticatedUser User user) throws IOException {
+        userService.deleteProfileImage(user);
+        return new ResponseEntity<>(ResponseDto.res(HttpStatus.OK, "유저 프로필 사진 삭제 완료"), HttpStatus.OK);
     }
 }
