@@ -15,7 +15,9 @@ import com.example.traditionalmarket.repository.MarketRepository;
 import com.example.traditionalmarket.repository.ReactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +28,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final ReactionRepository reactionRepository;
     private final MarketRepository marketRepository;
+    private final ImageFileService imageFileService;
 
     // 시장별 게시글 전체 조회하기
     public BoardResponseData getAllBoards(String marketName) {
@@ -47,7 +50,7 @@ public class BoardService {
 
 
     // 게시글 작성하기
-    public void createBoard(User user, String marketName, CreateBoardDto createBoardDto) {
+    public void createBoard(User user, String marketName, CreateBoardDto createBoardDto, List<MultipartFile> images) throws IOException {
         Market market = marketRepository.findByName(marketName).orElseThrow(
                 () -> new NotFoundException(ErrorCode.MARKET_NAME_NOT_FOUND));
 
@@ -60,12 +63,21 @@ public class BoardService {
                 .market(market)
                 .build();
         boardRepository.save(board);
+        uploadImages(board, images);
     }
 
 
     // 게시글 수정하기
-    public void updateBoard(User user, UUID boardId, UpdateBoardDto updateBoardDto) {
+    public void updateBoard(User user, UUID boardId, UpdateBoardDto updateBoardDto,
+                            List<MultipartFile> images, List<UUID> imageIdsToDelete) throws IOException {
         Board newBoard = updateFindBoardByIdAndUser(user, boardId);
+
+        if (imageIdsToDelete != null && !imageIdsToDelete.isEmpty()) {
+            imageFileService.deleteImagesByImageIds(imageIdsToDelete);
+        }
+
+        uploadImages(newBoard, images);
+
         newBoard.setTitle(updateBoardDto.getTitle())
                 .setContent(updateBoardDto.getContent());
         boardRepository.save(newBoard);
@@ -74,6 +86,7 @@ public class BoardService {
     // 게시글 삭제하기
     public void deleteBoard(User user, UUID boardId) {
         Board board = deleteFindBoardByIdAndUser(user, boardId);
+        imageFileService.deleteImages(board);
         boardRepository.delete(board);
     }
 
@@ -91,5 +104,12 @@ public class BoardService {
     private Board deleteFindBoardByIdAndUser(User user, UUID boardId) {
         return boardRepository.findByIdAndUser(boardId, user)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NO_ACCESS));
+    }
+
+    // 이미지 파일 업로드
+    public void uploadImages(Board board, List<MultipartFile> images) throws IOException {
+        if (images != null && !images.isEmpty()) {
+            imageFileService.uploadImages(board.getUser(), board, images);
+        }
     }
 }
