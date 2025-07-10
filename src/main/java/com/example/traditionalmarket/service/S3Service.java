@@ -20,6 +20,32 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket-name}")
     private String bucketName;
 
+    public String profileUploadImage(MultipartFile file) throws IOException {
+
+        String filename = file.getOriginalFilename();
+
+        if (filename == null) {
+            throw new IllegalStateException("파일명이 null입니다.");
+        }
+
+        int dotIndex = filename.lastIndexOf(".");
+        if (dotIndex == -1) {
+            throw new IllegalArgumentException("파일에 적절한 확장자가 없습니다: " + filename);
+        }
+
+        String key = "users/" + changedImageName(filename);
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.getSize());
+        metadata.setContentType(file.getContentType());
+
+        s3client.putObject(bucketName, key, file.getInputStream(), metadata);
+
+        String imageUrl = generateFileUrl(key);
+
+        return imageUrl;
+    }
+
     public List<String> uploadImage(List<MultipartFile> files) throws IOException {
         List<String> imageUrls = new ArrayList<>();
 
